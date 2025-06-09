@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -33,6 +34,11 @@ export class BookController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(+id, updateBookDto);
+  }
+
+  @Put(':id/status')
+  updateStatus(@Param('id') id: string) {
+    return this.bookService.updateStatus(+id);
   }
 
   @Delete(':id')

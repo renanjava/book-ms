@@ -28,6 +28,14 @@ export class BookService {
     return this.bookRepository.update(id, updateBookDto);
   }
 
+  async updateStatus(id: number) {
+    const book = await this.bookRepository.findOneOrFail({ where: { id } });
+    if (book.status == 'disponivel') {
+      return this.bookRepository.update(id, { status: 'indisponivel' });
+    }
+    return this.bookRepository.update(id, { status: 'disponivel' });
+  }
+
   remove(id: number) {
     return this.bookRepository.delete(id);
   }
