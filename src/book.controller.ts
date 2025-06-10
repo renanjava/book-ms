@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { Controller, Body, Param, Logger } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -13,7 +11,7 @@ export class BookController {
   private readonly logger = new Logger(BookController.name);
 
   @MessagePattern('create-book')
-  create(@Payload() data: any): Promise<CreateBookDto> {
+  create(@Payload() data: CreateBookDto): Promise<CreateBookDto> {
     this.logger.log(
       `Received create-book message with data: ${JSON.stringify(data)}`,
     );

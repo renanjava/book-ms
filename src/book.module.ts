@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { BookModule } from './book/book.module';
+import { BookService } from './book.service';
+import { BookController } from './book.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from './entities/book.entity';
 
 @Module({
   imports: [
-    BookModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -15,6 +16,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([Book]),
   ],
+  controllers: [BookController],
+  providers: [BookService],
 })
-export class AppModule {}
+export class BookModule {}
