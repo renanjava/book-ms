@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 const logger = new Logger('Main');
 async function bootstrap() {
@@ -21,7 +21,9 @@ async function bootstrap() {
       },
     },
   );
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   logger.log('Book microservice is starting...');
   await app.listen();
 }
+void bootstrap();
 void bootstrap();
