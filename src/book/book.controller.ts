@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import { Controller, Body, Param, Logger } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -18,7 +17,7 @@ export class BookController {
     this.logger.log(
       `Received create-book message with data: ${JSON.stringify(data)}`,
     );
-    return this.bookService.create(data.value);
+    return this.bookService.create(data);
   }
 
   @MessagePattern('find-all-book')
