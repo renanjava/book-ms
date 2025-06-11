@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Controller, Body, Param, Logger } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -19,13 +20,15 @@ export class BookController {
   }
 
   @MessagePattern('find-all-book')
-  findAll() {
+  findAll(@Payload() data: any) {
+    console.log('Received data:', data);
     return this.bookService.findAll();
   }
 
   @MessagePattern('find-book')
-  findOne(@Param('id') id: string) {
-    return this.bookService.findOne(+id);
+  findOne(@Payload() data: any) {
+    console.log('Received data:', data);
+    return this.bookService.findOne(data);
   }
 
   @MessagePattern('update-book')
