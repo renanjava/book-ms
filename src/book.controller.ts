@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { Controller, Body, Param, Logger } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Book } from './entities/book.entity';
 
 @Controller('book')
 export class BookController {
@@ -12,37 +12,49 @@ export class BookController {
   private readonly logger = new Logger(BookController.name);
 
   @MessagePattern('create-book')
-  create(@Payload() data: CreateBookDto): Promise<CreateBookDto> {
+  create(@Payload('body') body: CreateBookDto): Promise<Book> {
     this.logger.log(
-      `Received create-book message with data: ${JSON.stringify(data)}`,
+      `Received create-book message with data: ${JSON.stringify(body)}`,
     );
-    return this.bookService.create(data);
+    return this.bookService.create(body);
   }
 
   @MessagePattern('find-all-book')
-  findAll(@Payload() data: any) {
-    console.log('Received data:', data);
+  findAll(): Promise<Book[]> {
+    this.logger.log('Received find-all-book message');
     return this.bookService.findAll();
   }
 
   @MessagePattern('find-book')
-  findOne(@Payload() data: any) {
-    console.log('Received data:', data);
-    return this.bookService.findOne(data);
+  async findOne(@Payload('id') id: string): Promise<string> {
+    this.logger.log('Received find-book message with id:', id);
+    const book = await this.bookService.findOne(+id);
+    return JSON.stringify(book);
   }
 
   @MessagePattern('update-book')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.bookService.update(+id, updateBookDto);
+  async update(
+    @Payload('id') id: string,
+    @Payload('body') body,
+  ): Promise<string> {
+    this.logger.log(
+      `Received update-book message with id: ${id} and data: ${JSON.stringify(body)}`,
+    );
+    const book = await this.bookService.update(+id, body);
+    return JSON.stringify(book);
   }
 
   @MessagePattern('update-book-status')
-  updateStatus(@Param('id') id: string) {
-    return this.bookService.updateStatus(+id);
+  async updateStatus(@Payload('id') id: string) {
+    this.logger.log(`Received update-book-status message with id: ${id}`);
+    const book = await this.bookService.updateStatus(+id);
+    return JSON.stringify(book);
   }
 
   @MessagePattern('delete-book')
-  remove(@Param('id') id: string) {
-    return this.bookService.remove(+id);
+  async remove(@Payload('id') id: string) {
+    this.logger.log(`Received delete-book message with id: ${id}`);
+    const book = await this.bookService.remove(+id);
+    return JSON.stringify(book);
   }
 }
